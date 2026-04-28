@@ -25,8 +25,8 @@ function Index() {
     <div>
       <Hero game={featured} />
 
-      {/* Search section */}
-      <section className="relative -mt-20 z-20 mx-auto max-w-[1400px] px-6">
+      {/* Search section — sits below hero to avoid CTA collision */}
+      <section className="relative z-20 mx-auto max-w-[1400px] px-6 pt-10">
         <div className="flex flex-col items-center gap-4">
           <SearchBar />
         </div>

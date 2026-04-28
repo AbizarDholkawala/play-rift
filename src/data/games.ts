@@ -345,11 +345,11 @@ export const GAMES: Game[] = [
     tagline: "Welcome back to Vice City.",
     description:
       "The most anticipated game of the decade. Return to a sun-soaked Vice City and the surrounding state of Leonida in Rockstar's next-gen masterpiece.",
-    // Not on Steam yet — let onError → PLACEHOLDER_IMG handle gracefully.
-    cover: PLACEHOLDER_IMG,
-    hero: PLACEHOLDER_IMG,
-    screenshots: [PLACEHOLDER_IMG, PLACEHOLDER_IMG, PLACEHOLDER_IMG, PLACEHOLDER_IMG],
-    trailerPoster: PLACEHOLDER_IMG,
+    // Not on Steam yet — use local Rockstar key art fallback.
+    cover: gtaViCover,
+    hero: gtaViCover,
+    screenshots: [gtaViCover, gtaViCover, gtaViCover, gtaViCover],
+    trailerPoster: gtaViCover,
     trailerYoutubeId: "QdBZY2fkU-0",
     price: "TBA",
     rating: 0,
