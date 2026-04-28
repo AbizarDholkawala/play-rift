@@ -1,5 +1,7 @@
 export type Platform = "steam" | "epic" | "gog" | "xbox" | "playstation";
 import gtaViCover from "@/assets/gta-vi.png";
+import deathStranding2Cover from "@/assets/death-stranding-2.png";
+import alanWake2Cover from "@/assets/alan-wake-2.png";
 export type GamePassTier = "essential" | "premium" | "ultimate" | null;
 export type ModSupport = "Highly Moddable" | "Moderate" | "Restricted" | "No Mod Support";
 
