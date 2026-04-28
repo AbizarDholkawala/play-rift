@@ -118,8 +118,8 @@ function GameDetail() {
           </div>
         )}
 
-        <div className="absolute inset-x-0 bottom-0 p-8">
-          <div className="mx-auto max-w-[1400px]">
+        <div className="absolute inset-x-0 bottom-0 p-8 pb-12">
+          <div className="mx-auto max-w-[1400px] pr-4">
             <Link
               to="/"
               className="inline-block mb-4 text-[10px] tracking-[0.3em] font-display text-muted-foreground hover:text-foreground"
@@ -129,7 +129,7 @@ function GameDetail() {
             <div className="text-[10px] tracking-[0.3em] font-display text-muted-foreground mb-2">
               {game.studio.toUpperCase()} · {game.year} · {game.genres.join(" / ").toUpperCase()}
             </div>
-            <h1 className="font-display font-black text-5xl md:text-7xl text-glow leading-[0.9]">
+            <h1 className="font-display font-black text-4xl sm:text-5xl md:text-7xl text-glow leading-[0.9] break-words max-w-[90%]">
               {game.title}
             </h1>
           </div>
