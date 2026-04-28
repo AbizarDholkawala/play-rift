@@ -344,16 +344,11 @@ export const GAMES: Game[] = [
     tagline: "Welcome back to Vice City.",
     description:
       "The most anticipated game of the decade. Return to a sun-soaked Vice City and the surrounding state of Leonida in Rockstar's next-gen masterpiece.",
-    // Official Rockstar press art (hosted on rockstargames.com CDN)
-    cover: "https://www.rockstargames.com/img/global/news/upload/actual_1733238800.jpg",
-    hero: "https://www.rockstargames.com/img/global/news/upload/actual_1733238771.jpg",
-    screenshots: [
-      "https://www.rockstargames.com/img/global/news/upload/actual_1733238771.jpg",
-      "https://www.rockstargames.com/img/global/news/upload/actual_1733238782.jpg",
-      "https://www.rockstargames.com/img/global/news/upload/actual_1733238790.jpg",
-      "https://www.rockstargames.com/img/global/news/upload/actual_1733238800.jpg",
-    ],
-    trailerPoster: "https://www.rockstargames.com/img/global/news/upload/actual_1733238771.jpg",
+    // Not on Steam yet — let onError → PLACEHOLDER_IMG handle gracefully.
+    cover: PLACEHOLDER_IMG,
+    hero: PLACEHOLDER_IMG,
+    screenshots: [PLACEHOLDER_IMG, PLACEHOLDER_IMG, PLACEHOLDER_IMG, PLACEHOLDER_IMG],
+    trailerPoster: PLACEHOLDER_IMG,
     trailerYoutubeId: "QdBZY2fkU-0",
     price: "TBA",
     rating: 0,
