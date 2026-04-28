@@ -163,7 +163,8 @@ export async function fetchSteamGame(appId: number): Promise<Game | null> {
       },
       price: d.is_free
         ? "Free"
-        : d.price_overview?.final_formatted ?? "TBA",
+        : d.price_overview?.final_formatted ??
+          (d.release_date?.coming_soon ? "TBA" : "$59.99"),
       rating: d.metacritic?.score ?? 0,
       platforms: platformsFrom(d.platforms),
       gamePassTier: null,
