@@ -54,7 +54,7 @@ function write(ids: string[]) {
 }
 
 export function useVault() {
-  const [ids, setIds] = useState<string[]>(() => read());
+  const [ids, setIds] = useState<string[]>([]);
   useEffect(() => {
     const l: Listener = (next) => setIds(next);
     listeners.add(l);
