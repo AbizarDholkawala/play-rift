@@ -1,9 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import type { Game } from "@/data/games";
 import { PlatformBadges } from "./PlatformBadges";
 
 export function Hero({ game }: { game: Game }) {
+  const [sig, setSig] = useState("000000");
+  useEffect(() => {
+    setSig(Math.floor(Math.random() * 1e6).toString().padStart(6, "0"));
+  }, []);
   return (
     <section className="relative h-[88vh] min-h-[640px] overflow-hidden">
       {/* mock "video" — animated zoom on hero image */}
@@ -70,7 +75,7 @@ export function Hero({ game }: { game: Game }) {
         // FEATURED.001
       </div>
       <div className="absolute top-4 right-4 text-[10px] tracking-[0.3em] font-display text-muted-foreground">
-        SIG: {(Math.random() * 1e6).toFixed(0).padStart(6, "0")}
+        SIG: {sig}
       </div>
     </section>
   );
