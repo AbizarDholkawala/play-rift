@@ -134,6 +134,13 @@ export async function fetchSteamGame(appId: number): Promise<Game | null> {
         : [`${CDN}/${appId}/library_hero.jpg`, `${CDN}/${appId}/header.jpg`],
       trailerPoster: `${CDN}/${appId}/library_hero.jpg`,
       trailerYoutubeId: undefined,
+      trailerMp4: trailer?.mp4?.max ?? trailer?.mp4?.["480"],
+      tags: (d.categories ?? []).map((c: any) => c.description).slice(0, 16),
+      osSupport: {
+        windows: !!d.platforms?.windows,
+        mac: !!d.platforms?.mac,
+        linux: !!d.platforms?.linux,
+      },
       price: d.is_free
         ? "Free"
         : d.price_overview?.final_formatted ?? "TBA",
@@ -145,11 +152,7 @@ export async function fetchSteamGame(appId: number): Promise<Game | null> {
       systemReq: { minimum: min, recommended: rec },
       willItRun: inferWillItRun(rec.gpu === "—" ? min : rec),
       hype: d.release_date?.coming_soon ? 80 : undefined,
-      // Embed Steam's mp4 trailer hint via youtube fallback handled in UI.
     };
-
-    // Attach mp4 trailer URL via a side channel for the detail UI.
-    (game as any).steamTrailerMp4 = trailer?.mp4?.max ?? trailer?.mp4?.["480"];
     return game;
   } catch {
     return null;
