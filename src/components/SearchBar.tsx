@@ -11,6 +11,7 @@ export function SearchBar({ autoFocus = false }: { autoFocus?: boolean }) {
   const [loadingSteam, setLoadingSteam] = useState(false);
   const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const results = useMemo(() => {
     if (!q.trim()) return [];
@@ -50,6 +51,26 @@ export function SearchBar({ autoFocus = false }: { autoFocus?: boolean }) {
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
+  // Global "/" shortcut to focus the search input.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "/") return;
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName;
+      const isEditable =
+        tag === "INPUT" ||
+        tag === "TEXTAREA" ||
+        tag === "SELECT" ||
+        target?.isContentEditable;
+      if (isEditable) return;
+      e.preventDefault();
+      inputRef.current?.focus();
+      setOpen(true);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
   return (
     <div ref={ref} className="relative w-full max-w-2xl">
       <div className="relative neon-border rounded-md">
@@ -59,6 +80,7 @@ export function SearchBar({ autoFocus = false }: { autoFocus?: boolean }) {
             <path d="m21 21-4.3-4.3" />
           </svg>
           <input
+            ref={inputRef}
             autoFocus={autoFocus}
             value={q}
             onChange={(e) => {
@@ -69,9 +91,6 @@ export function SearchBar({ autoFocus = false }: { autoFocus?: boolean }) {
             placeholder="SEARCH THE DATABASE — try 'cyberpunk', 'horror', 'rockstar'…"
             className="flex-1 bg-transparent outline-none text-sm tracking-wide placeholder:text-muted-foreground/60 placeholder:font-display placeholder:text-[11px] placeholder:tracking-[0.2em]"
           />
-          <kbd className="hidden md:inline-flex text-[10px] font-display font-bold tracking-wider px-2 py-1 border border-border rounded text-muted-foreground">
-            ⌘ K
-          </kbd>
         </div>
       </div>
 

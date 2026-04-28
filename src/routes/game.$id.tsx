@@ -388,9 +388,11 @@ function SpecBlock({
 
 function Spec({ k, v }: { k: string; v: string }) {
   return (
-    <div className="grid grid-cols-[60px_1fr] gap-2">
-      <dt className="text-muted-foreground tracking-wider font-display">{k}</dt>
-      <dd className="text-foreground/90">{v}</dd>
+    <div className="grid grid-cols-[72px_minmax(0,1fr)] gap-x-3 gap-y-0.5 items-baseline py-1 border-b border-border/30 last:border-0">
+      <dt className="text-muted-foreground tracking-wider font-display text-[10px] uppercase">
+        {k}
+      </dt>
+      <dd className="text-foreground/90 break-words leading-snug">{v}</dd>
     </div>
   );
 }
