@@ -1,6 +1,9 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { ThemeProvider } from "@/hooks/useTheme";
+import { Nav } from "@/components/Nav";
+import { useSmoothScroll } from "@/hooks/useLenis";
 
 function NotFoundComponent() {
   return (
@@ -29,16 +32,24 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "NULLCADE — Game Database & Recommender" },
+      {
+        name: "description",
+        content:
+          "Discover, track, and collect games. A premium tech-noir game database with platform availability, system requirements, and modding intel.",
+      },
+      { property: "og:title", content: "NULLCADE — Game Database" },
+      { property: "og:description", content: "Discover, track, and collect games." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap",
+      },
       {
         rel: "stylesheet",
         href: appCss,
@@ -65,5 +76,18 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return <Outlet />;
+  useSmoothScroll();
+  return (
+    <ThemeProvider>
+      <div className="min-h-screen flex flex-col">
+        <Nav />
+        <main className="flex-1">
+          <Outlet />
+        </main>
+        <footer className="border-t border-border py-8 text-center text-[10px] tracking-[0.3em] font-display text-muted-foreground">
+          NULLCADE // BUILT FOR PLAYERS // {new Date().getFullYear()}
+        </footer>
+      </div>
+    </ThemeProvider>
+  );
 }
