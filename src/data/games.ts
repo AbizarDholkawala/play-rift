@@ -1,5 +1,7 @@
 export type Platform = "steam" | "epic" | "gog" | "xbox" | "playstation";
 import gtaViCover from "@/assets/gta-vi.png";
+import deathStranding2Cover from "@/assets/death-stranding-2.png";
+import alanWake2Cover from "@/assets/alan-wake-2.png";
 export type GamePassTier = "essential" | "premium" | "ultimate" | null;
 export type ModSupport = "Highly Moddable" | "Moderate" | "Restricted" | "No Mod Support";
 
@@ -194,10 +196,10 @@ export const GAMES: Game[] = [
     genres: ["Action", "Adventure", "Sci-Fi"],
     tagline: "Should we have connected?",
     description: "Sam Porter Bridges returns. Cross continents. Reconnect a fractured world.",
-    cover: steamPortrait(2900050),
-    hero: steamHero(2900050),
-    screenshots: steamScreens(2900050),
-    trailerPoster: steamHero(2900050),
+    cover: deathStranding2Cover,
+    hero: deathStranding2Cover,
+    screenshots: [deathStranding2Cover, steamHero(2900050), steamHeader(2900050), deathStranding2Cover],
+    trailerPoster: deathStranding2Cover,
     trailerYoutubeId: "qIcTM8WXFjk",
     price: "$69.99",
     rating: 92,
@@ -220,10 +222,10 @@ export const GAMES: Game[] = [
     genres: ["Survival Horror", "Psychological", "Narrative"],
     tagline: "It's not a loop. It's a spiral.",
     description: "Two heroes, two realities, one nightmare. A survival horror sequel 13 years in the making.",
-    cover: steamPortrait(2515020),
-    hero: steamHero(2515020),
-    screenshots: steamScreens(2515020),
-    trailerPoster: steamHero(2515020),
+    cover: alanWake2Cover,
+    hero: alanWake2Cover,
+    screenshots: [alanWake2Cover, steamHero(2515020), steamHeader(2515020), alanWake2Cover],
+    trailerPoster: alanWake2Cover,
     trailerYoutubeId: "X2eVcvHiTTY",
     price: "$59.99",
     rating: 90,
