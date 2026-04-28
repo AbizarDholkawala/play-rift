@@ -1,4 +1,5 @@
 export type Platform = "steam" | "epic" | "gog" | "xbox" | "playstation";
+import gtaViCover from "@/assets/gta-vi.png";
 export type GamePassTier = "essential" | "premium" | "ultimate" | null;
 export type ModSupport = "Highly Moddable" | "Moderate" | "Restricted" | "No Mod Support";
 
