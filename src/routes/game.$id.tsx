@@ -137,7 +137,7 @@ function GameDetail() {
       </section>
 
       {/* Action row */}
-      <section className="mx-auto max-w-[1400px] px-6 -mt-2 mb-12 flex flex-wrap items-center gap-3">
+      <section className="mx-auto max-w-[1400px] px-6 mt-8 mb-12 flex flex-wrap items-center gap-3">
         <button
           onClick={() => toggle(game.id)}
           className={`px-6 py-3 font-display font-bold text-xs tracking-[0.25em] rounded-sm border transition-all ${
