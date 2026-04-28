@@ -1,15 +1,23 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { getGame, type Game } from "@/data/games";
+import { getGame, type Game, PLACEHOLDER_IMG } from "@/data/games";
+import { fetchSteamGame } from "@/lib/steamApi";
 import { PlatformBadges } from "@/components/PlatformBadges";
 import { useVault } from "@/hooks/useTheme";
 
 export const Route = createFileRoute("/game/$id")({
-  loader: ({ params }) => {
-    const game = getGame(params.id);
-    if (!game) throw notFound();
-    return { game };
+  loader: async ({ params }) => {
+    // Local DB hit first.
+    const local = getGame(params.id);
+    if (local) return { game: local };
+    // Live Steam fetch for `steam-<appid>` ids.
+    const m = params.id.match(/^steam-(\d+)$/);
+    if (m) {
+      const remote = await fetchSteamGame(Number(m[1]));
+      if (remote) return { game: remote };
+    }
+    throw notFound();
   },
   head: ({ loaderData }) => {
     const g = loaderData?.game;
@@ -61,6 +69,10 @@ function GameDetail() {
           initial={{ scale: 1.2 }}
           animate={{ scale: 1.05 }}
           transition={{ duration: 14, ease: "easeOut", repeat: Infinity, repeatType: "reverse" }}
+          onError={(e) => {
+            const img = e.currentTarget;
+            if (img.src !== PLACEHOLDER_IMG) img.src = PLACEHOLDER_IMG;
+          }}
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
@@ -139,19 +151,31 @@ function GameDetail() {
               <img
                 src={game.screenshots[shotIdx]}
                 alt={`Screenshot ${shotIdx + 1}`}
+                onError={(e) => {
+                  const img = e.currentTarget;
+                  if (img.src !== PLACEHOLDER_IMG) img.src = PLACEHOLDER_IMG;
+                }}
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="grid grid-cols-4 gap-2">
               {game.screenshots.map((src: string, i: number) => (
                 <button
-                  key={src}
+                  key={`${src}-${i}`}
                   onClick={() => setShotIdx(i)}
                   className={`aspect-video overflow-hidden rounded-sm border-2 transition-all ${
                     i === shotIdx ? "border-foreground" : "border-transparent opacity-60 hover:opacity-100"
                   }`}
                 >
-                  <img src={src} alt="" className="w-full h-full object-cover" />
+                  <img
+                    src={src}
+                    alt=""
+                    onError={(e) => {
+                      const img = e.currentTarget;
+                      if (img.src !== PLACEHOLDER_IMG) img.src = PLACEHOLDER_IMG;
+                    }}
+                    className="w-full h-full object-cover"
+                  />
                 </button>
               ))}
             </div>
