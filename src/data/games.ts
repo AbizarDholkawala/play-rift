@@ -38,8 +38,6 @@ const steamCDN = "https://shared.steamstatic.com/store_item_assets/steam/apps";
 const steamPortrait = (id: number) => `${steamCDN}/${id}/library_600x900.jpg`;
 const steamHero = (id: number) => `${steamCDN}/${id}/library_hero.jpg`;
 const steamHeader = (id: number) => `${steamCDN}/${id}/header.jpg`;
-const steamShot = (id: number, n: number) =>
-  `${steamCDN}/${id}/ss_${n}.1920x1080.jpg`;
 
 const baseSpecs = (cpu: string, gpu: string, ram: string) => ({
   minimum: { os: "Windows 10 64-bit", cpu, gpu, ram, storage: "75 GB SSD" },
@@ -52,41 +50,29 @@ const baseSpecs = (cpu: string, gpu: string, ram: string) => ({
   },
 });
 
-// Curated screenshot hashes from Steam (real store screenshots)
-const SHOTS: Record<string, string[]> = {
-  "1091500": [
-    "ss_aa3a4b394aa18b71b1dde0bf3ddec80c4be07e3a",
-    "ss_b16d89f7df0e9af17017d59b94c20c2b4fd2c21a",
-    "ss_4bea0bd43340efd44d1bbf97a8e88cb541bbd3df",
-    "ss_8dc9d2c7c8cb05f4e7c8e3c1b5d4e6e9c2f1b4a8",
-  ],
-  "1245620": [
-    "ss_fa12ddc16d0fcfe37a6ce4dbcfbafda41cb04d8b",
-    "ss_e5e421adac4b6ce8de8c8a3d67d09c22b3bcaddc",
-    "ss_88c3d3c5f3036f3a3df3ed3c33df0c3a3bf03c3d",
-    "ss_19dca81ed2cb6a85b25f8e44d4d9b1f79b5c7c49",
-  ],
-  "1086940": [
-    "ss_2a8579d96216e189ab8f47fdf3f7da55e2e0bbcd",
-    "ss_0b5aaab1ed2fac88d77c6c8cdfd2f48c2e89aa24",
-    "ss_0a55be97c3bbe7e02e1c10dd6ed8d9eecd9cfabc",
-    "ss_ed5ef5cd0b2f2da7d2bf7eee2cf1e1c1a4b1d4f5",
-  ],
-  "1716740": [
-    "ss_5c6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e",
-    "ss_b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
-    "ss_c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
-    "ss_d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7",
-  ],
-};
-
-// Use header.jpg for screenshots fallback (always exists on Steam)
+// Always-available screenshot fallbacks built from CDN assets every Steam app has.
 const steamScreens = (id: number) => [
   steamHero(id),
   steamHeader(id),
+  `${steamCDN}/${id}/page_bg_generated_v6b.jpg`,
   steamHero(id),
-  steamHeader(id),
 ];
+
+// Universal placeholder (gradient noir tile) — used when remote image 404s.
+export const PLACEHOLDER_IMG =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 900'>
+      <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+        <stop offset='0%' stop-color='#0a0a14'/><stop offset='100%' stop-color='#1a1030'/>
+      </linearGradient></defs>
+      <rect width='600' height='900' fill='url(#g)'/>
+      <text x='50%' y='50%' font-family='monospace' font-size='28' fill='#39ff14' opacity='0.6'
+        text-anchor='middle' letter-spacing='6'>NULLCADE</text>
+      <text x='50%' y='56%' font-family='monospace' font-size='13' fill='#888'
+        text-anchor='middle' letter-spacing='4'>NO SIGNAL</text>
+    </svg>`,
+  );
 
 export const GAMES: Game[] = [
   {
