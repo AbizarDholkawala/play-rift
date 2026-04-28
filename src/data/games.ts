@@ -32,6 +32,9 @@ export interface Game {
   trending?: boolean;
   steamAppId?: number;
   trailerYoutubeId?: string;
+  trailerMp4?: string;
+  tags?: string[];
+  osSupport?: { windows: boolean; mac: boolean; linux: boolean };
 }
 
 // Steam CDN helpers — public, keyless, CORS-friendly

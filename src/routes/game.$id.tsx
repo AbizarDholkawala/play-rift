@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { getGame, type Game, PLACEHOLDER_IMG } from "@/data/games";
 import { fetchSteamGame } from "@/lib/steamApi";
 import { PlatformBadges } from "@/components/PlatformBadges";
@@ -57,41 +57,66 @@ function GameDetail() {
   const { has, toggle } = useVault();
   const [shotIdx, setShotIdx] = useState(0);
   const [trailerOpen, setTrailerOpen] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const inVault = has(game.id);
+  const hasMp4 = !!game.trailerMp4;
+  const hasYt = !!game.trailerYoutubeId;
 
   return (
     <div>
       {/* Cinematic hero / "trailer" */}
       <section className="relative h-[80vh] min-h-[600px] overflow-hidden">
-        <motion.img
-          src={game.hero}
-          alt={game.title}
-          initial={{ scale: 1.2 }}
-          animate={{ scale: 1.05 }}
-          transition={{ duration: 14, ease: "easeOut", repeat: Infinity, repeatType: "reverse" }}
-          onError={(e) => {
-            const img = e.currentTarget;
-            if (img.src !== PLACEHOLDER_IMG) img.src = PLACEHOLDER_IMG;
-          }}
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+        {hasMp4 ? (
+          <video
+            ref={videoRef}
+            src={game.trailerMp4}
+            poster={game.hero}
+            autoPlay
+            loop
+            muted={muted}
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <motion.img
+            src={game.hero}
+            alt={game.title}
+            initial={{ scale: 1.2 }}
+            animate={{ scale: 1.05 }}
+            transition={{ duration: 14, ease: "easeOut", repeat: Infinity, repeatType: "reverse" }}
+            onError={(e) => {
+              const img = e.currentTarget;
+              if (img.src !== PLACEHOLDER_IMG) img.src = PLACEHOLDER_IMG;
+            }}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
         <div className="absolute inset-0 scanlines opacity-30 pointer-events-none" />
 
-        {/* play overlay */}
-        <div className="absolute inset-0 grid place-items-center">
-          <motion.button
-            onClick={() => game.trailerYoutubeId && setTrailerOpen(true)}
-            disabled={!game.trailerYoutubeId}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 }}
-            className="w-20 h-20 rounded-full border-2 border-white/40 grid place-items-center backdrop-blur-md bg-black/30 hover:scale-110 hover:border-[var(--neon-1)] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-            aria-label="Play trailer"
-          >
-            <div className="w-0 h-0 border-y-[10px] border-y-transparent border-l-[16px] border-l-white ml-1" />
-          </motion.button>
-        </div>
+        {/* trailer controls */}
+        {(hasMp4 || hasYt) && (
+          <div className="absolute top-6 right-6 flex gap-2 z-10">
+            {hasMp4 && (
+              <button
+                onClick={() => {
+                  setMuted((m) => !m);
+                  if (videoRef.current) videoRef.current.muted = !muted ? false : true;
+                }}
+                className="px-3 py-2 text-[10px] tracking-[0.25em] font-display font-bold rounded-sm bg-black/60 backdrop-blur border border-white/20 text-white hover:border-[var(--neon-1)]"
+              >
+                {muted ? "🔇 UNMUTE" : "🔊 MUTE"}
+              </button>
+            )}
+            <button
+              onClick={() => setTrailerOpen(true)}
+              className="px-3 py-2 text-[10px] tracking-[0.25em] font-display font-bold rounded-sm bg-[var(--neon-1)] text-black hover:scale-105 transition-transform"
+            >
+              ▶ FULL TRAILER
+            </button>
+          </div>
+        )}
 
         <div className="absolute inset-x-0 bottom-0 p-8">
           <div className="mx-auto max-w-[1400px]">
@@ -195,6 +220,13 @@ function GameDetail() {
         <aside className="space-y-6">
           <Module label="AVAILABILITY">
             <PlatformBadges game={game} size="md" />
+            {game.osSupport && (
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {game.osSupport.windows && <OsBadge label="WINDOWS" />}
+                {game.osSupport.mac && <OsBadge label="MACOS" />}
+                {game.osSupport.linux && <OsBadge label="LINUX / STEAMOS" />}
+              </div>
+            )}
           </Module>
 
           <Module label="MOD SUPPORT">
@@ -222,12 +254,27 @@ function GameDetail() {
               ))}
             </div>
           </Module>
+
+          {game.tags && game.tags.length > 0 && (
+            <Module label="STEAM TAGS">
+              <div className="flex flex-wrap gap-1.5">
+                {game.tags.map((t: string) => (
+                  <span
+                    key={t}
+                    className="text-[10px] tracking-wider font-display px-2 py-1 rounded-sm bg-secondary/60 text-foreground/80"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </Module>
+          )}
         </aside>
       </section>
 
       {/* Trailer modal */}
       <AnimatePresence>
-        {trailerOpen && game.trailerYoutubeId && (
+        {trailerOpen && (hasMp4 || hasYt) && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -242,14 +289,24 @@ function GameDetail() {
               onClick={(e) => e.stopPropagation()}
               className="relative w-full max-w-5xl aspect-video rounded-md overflow-hidden border border-border shadow-2xl"
             >
-              <iframe
-                title={`${game.title} trailer`}
-                src={`https://www.youtube-nocookie.com/embed/${game.trailerYoutubeId}?autoplay=1&rel=0&modestbranding=1`}
-                allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-                allowFullScreen
-                className="w-full h-full"
-                frameBorder={0}
-              />
+              {hasMp4 ? (
+                <video
+                  src={game.trailerMp4}
+                  poster={game.hero}
+                  autoPlay
+                  controls
+                  className="w-full h-full bg-black"
+                />
+              ) : (
+                <iframe
+                  title={`${game.title} trailer`}
+                  src={`https://www.youtube-nocookie.com/embed/${game.trailerYoutubeId}?autoplay=1&rel=0&modestbranding=1`}
+                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                  allowFullScreen
+                  className="w-full h-full"
+                  frameBorder={0}
+                />
+              )}
               <button
                 onClick={() => setTrailerOpen(false)}
                 className="absolute top-3 right-3 w-9 h-9 grid place-items-center rounded-full bg-black/70 border border-white/20 text-white hover:bg-black"
@@ -262,6 +319,14 @@ function GameDetail() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+function OsBadge({ label }: { label: string }) {
+  return (
+    <span className="text-[9px] px-2 py-0.5 font-display tracking-wider font-bold rounded-sm border border-[var(--neon-4)]/40 text-[var(--neon-4)] bg-[var(--neon-4)]/5">
+      {label}
+    </span>
   );
 }
 
