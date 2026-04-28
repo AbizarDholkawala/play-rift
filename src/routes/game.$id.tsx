@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { getGame, type Game } from "@/data/games";
 import { PlatformBadges } from "@/components/PlatformBadges";
@@ -48,6 +48,7 @@ function GameDetail() {
   const { game } = Route.useLoaderData();
   const { has, toggle } = useVault();
   const [shotIdx, setShotIdx] = useState(0);
+  const [trailerOpen, setTrailerOpen] = useState(false);
   const inVault = has(game.id);
 
   return (
@@ -67,14 +68,17 @@ function GameDetail() {
 
         {/* play overlay */}
         <div className="absolute inset-0 grid place-items-center">
-          <motion.div
+          <motion.button
+            onClick={() => game.trailerYoutubeId && setTrailerOpen(true)}
+            disabled={!game.trailerYoutubeId}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3 }}
-            className="w-20 h-20 rounded-full border-2 border-white/40 grid place-items-center backdrop-blur-md bg-black/30 hover:scale-110 hover:border-[var(--neon-1)] transition-all cursor-pointer"
+            className="w-20 h-20 rounded-full border-2 border-white/40 grid place-items-center backdrop-blur-md bg-black/30 hover:scale-110 hover:border-[var(--neon-1)] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+            aria-label="Play trailer"
           >
             <div className="w-0 h-0 border-y-[10px] border-y-transparent border-l-[16px] border-l-white ml-1" />
-          </motion.div>
+          </motion.button>
         </div>
 
         <div className="absolute inset-x-0 bottom-0 p-8">
@@ -196,6 +200,43 @@ function GameDetail() {
           </Module>
         </aside>
       </section>
+
+      {/* Trailer modal */}
+      <AnimatePresence>
+        {trailerOpen && game.trailerYoutubeId && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setTrailerOpen(false)}
+            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm grid place-items-center p-6"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-5xl aspect-video rounded-md overflow-hidden border border-border shadow-2xl"
+            >
+              <iframe
+                title={`${game.title} trailer`}
+                src={`https://www.youtube-nocookie.com/embed/${game.trailerYoutubeId}?autoplay=1&rel=0&modestbranding=1`}
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                allowFullScreen
+                className="w-full h-full"
+                frameBorder={0}
+              />
+              <button
+                onClick={() => setTrailerOpen(false)}
+                className="absolute top-3 right-3 w-9 h-9 grid place-items-center rounded-full bg-black/70 border border-white/20 text-white hover:bg-black"
+                aria-label="Close trailer"
+              >
+                ✕
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
