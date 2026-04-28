@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { UPCOMING, RECENT } from "@/data/games";
+import { PLACEHOLDER_IMG } from "@/data/games";
 import { PlatformBadges } from "@/components/PlatformBadges";
 import { useVault } from "@/hooks/useTheme";
 
@@ -130,6 +131,10 @@ function TimelineRow({ game, index }: { game: typeof UPCOMING[number]; index: nu
           src={game.cover}
           alt={game.title}
           loading="lazy"
+          onError={(e) => {
+            const img = e.currentTarget;
+            if (img.src !== PLACEHOLDER_IMG) img.src = PLACEHOLDER_IMG;
+          }}
           className="w-full md:w-40 h-32 md:h-48 object-cover rounded-sm"
         />
 
