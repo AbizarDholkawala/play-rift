@@ -1,4 +1,5 @@
 export type Platform = "steam" | "epic" | "gog" | "xbox" | "playstation";
+import gtaViCover from "@/assets/gta-vi.png";
 export type GamePassTier = "essential" | "premium" | "ultimate" | null;
 export type ModSupport = "Highly Moddable" | "Moderate" | "Restricted" | "No Mod Support";
 
@@ -68,7 +69,7 @@ export const PLACEHOLDER_IMG =
       </linearGradient></defs>
       <rect width='600' height='900' fill='url(#g)'/>
       <text x='50%' y='50%' font-family='monospace' font-size='28' fill='#39ff14' opacity='0.6'
-        text-anchor='middle' letter-spacing='6'>NULLCADE</text>
+        text-anchor='middle' letter-spacing='6'>PLAY RIFT</text>
       <text x='50%' y='56%' font-family='monospace' font-size='13' fill='#888'
         text-anchor='middle' letter-spacing='4'>NO SIGNAL</text>
     </svg>`,
@@ -344,11 +345,11 @@ export const GAMES: Game[] = [
     tagline: "Welcome back to Vice City.",
     description:
       "The most anticipated game of the decade. Return to a sun-soaked Vice City and the surrounding state of Leonida in Rockstar's next-gen masterpiece.",
-    // Not on Steam yet — let onError → PLACEHOLDER_IMG handle gracefully.
-    cover: PLACEHOLDER_IMG,
-    hero: PLACEHOLDER_IMG,
-    screenshots: [PLACEHOLDER_IMG, PLACEHOLDER_IMG, PLACEHOLDER_IMG, PLACEHOLDER_IMG],
-    trailerPoster: PLACEHOLDER_IMG,
+    // Not on Steam yet — use local Rockstar key art fallback.
+    cover: gtaViCover,
+    hero: gtaViCover,
+    screenshots: [gtaViCover, gtaViCover, gtaViCover, gtaViCover],
+    trailerPoster: gtaViCover,
     trailerYoutubeId: "QdBZY2fkU-0",
     price: "TBA",
     rating: 0,

@@ -6,7 +6,7 @@ import { useVault } from "@/hooks/useTheme";
 export const Route = createFileRoute("/vault")({
   head: () => ({
     meta: [
-      { title: "The Vault — Your Game Shelf · NULLCADE" },
+      { title: "The Vault — Your Game Shelf · PLAY RIFT" },
       { name: "description", content: "Your curated personal game collection." },
       { property: "og:title", content: "The Vault" },
       { property: "og:description", content: "Your curated personal game collection." },

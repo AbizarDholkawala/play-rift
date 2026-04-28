@@ -9,7 +9,7 @@ import { useVault } from "@/hooks/useTheme";
 export const Route = createFileRoute("/radar")({
   head: () => ({
     meta: [
-      { title: "Radar — Upcoming & Recent Releases · NULLCADE" },
+      { title: "Radar — Upcoming & Recent Releases · PLAY RIFT" },
       {
         name: "description",
         content:
