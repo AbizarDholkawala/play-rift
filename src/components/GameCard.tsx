@@ -1,21 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { Game } from "@/data/games";
 import { PLACEHOLDER_IMG } from "@/data/games";
 import { useVault } from "@/hooks/useTheme";
 
 export function GameCard({ game, index = 0 }: { game: Game; index?: number }) {
   const [hover, setHover] = useState(false);
-  const [shotIdx, setShotIdx] = useState(0);
+  const [coverFailed, setCoverFailed] = useState(false);
   const { has, toggle } = useVault();
   const inVault = has(game.id);
-
-  useEffect(() => {
-    if (!hover) return;
-    const i = setInterval(() => setShotIdx((s) => (s + 1) % game.screenshots.length), 1100);
-    return () => clearInterval(i);
-  }, [hover, game.screenshots.length]);
 
   return (
     <motion.div
@@ -30,38 +24,28 @@ export function GameCard({ game, index = 0 }: { game: Game; index?: number }) {
         to="/game/$id"
         params={{ id: game.id }}
         onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => {
-          setHover(false);
-          setShotIdx(0);
-        }}
+        onMouseLeave={() => setHover(false)}
         className="block relative aspect-[3/4] overflow-hidden rounded-md bg-card neon-border"
       >
-        {/* base cover */}
-        <img
-          src={game.cover}
-          alt={game.title}
-          loading="lazy"
-          onError={(e) => {
-            const img = e.currentTarget;
-            if (img.src !== PLACEHOLDER_IMG) img.src = PLACEHOLDER_IMG;
-          }}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
-        {/* slideshow on hover */}
-        {game.screenshots.map((src, i) => (
+        {/* base cover — static, no hover slideshow */}
+        {coverFailed || !game.cover ? (
+          <NoSignalFallback title={game.title} />
+        ) : (
           <img
-            key={src}
-            src={src}
-            alt=""
-            aria-hidden
+            src={game.cover}
+            alt={game.title}
+            loading="lazy"
             onError={(e) => {
               const img = e.currentTarget;
-              if (img.src !== PLACEHOLDER_IMG) img.src = PLACEHOLDER_IMG;
+              if (PLACEHOLDER_IMG && img.src !== PLACEHOLDER_IMG) {
+                img.src = PLACEHOLDER_IMG;
+              } else {
+                setCoverFailed(true);
+              }
             }}
-            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
-            style={{ opacity: hover && i === shotIdx ? 1 : 0 }}
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
-        ))}
+        )}
         {/* gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent" />
         {/* scanlines */}
@@ -132,5 +116,25 @@ export function GameCard({ game, index = 0 }: { game: Game; index?: number }) {
         </div>
       </Link>
     </motion.div>
+  );
+}
+
+function NoSignalFallback({ title }: { title: string }) {
+  return (
+    <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-[var(--neon-2)]/20 via-background to-[var(--neon-1)]/20 overflow-hidden">
+      <div className="absolute inset-0 grid-bg opacity-40" />
+      <div className="absolute inset-0 scanlines opacity-50 pointer-events-none" />
+      <div className="relative text-center px-4">
+        <div className="text-[9px] tracking-[0.4em] font-display font-bold text-[var(--neon-1)] mb-2 animate-pulse">
+          ◉ NO SIGNAL
+        </div>
+        <div className="font-display font-black text-2xl text-glow tracking-tight leading-tight line-clamp-3">
+          {title}
+        </div>
+        <div className="mt-3 text-[8px] tracking-[0.5em] font-display text-muted-foreground">
+          PLAY RIFT
+        </div>
+      </div>
+    </div>
   );
 }
