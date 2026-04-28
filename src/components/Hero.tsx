@@ -9,20 +9,46 @@ export function Hero({ game }: { game: Game }) {
   useEffect(() => {
     setSig(Math.floor(Math.random() * 1e6).toString().padStart(6, "0"));
   }, []);
+
+  const yt = game.trailerYoutubeId;
+
   return (
-    <section className="relative h-[88vh] min-h-[640px] overflow-hidden">
-      {/* mock "video" — animated zoom on hero image */}
-      <motion.img
-        src={game.hero}
-        alt={game.title}
-        initial={{ scale: 1.15 }}
-        animate={{ scale: 1.05 }}
-        transition={{ duration: 12, ease: "easeOut", repeat: Infinity, repeatType: "reverse" }}
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/20" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background via-background/40 to-transparent" />
+    <section className="relative h-[88vh] min-h-[640px] overflow-hidden bg-background">
+      {/* Trailer (YouTube) — muted, autoplay, looped */}
+      {yt ? (
+        <div className="absolute inset-0 pointer-events-none">
+          <iframe
+            title={`${game.title} trailer`}
+            src={`https://www.youtube-nocookie.com/embed/${yt}?autoplay=1&mute=1&controls=0&loop=1&playlist=${yt}&modestbranding=1&playsinline=1&rel=0&disablekb=1&iv_load_policy=3`}
+            allow="autoplay; encrypted-media; picture-in-picture"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[177.78vh] h-[100vh] min-w-full min-h-full pointer-events-none"
+            frameBorder={0}
+          />
+        </div>
+      ) : (
+        <motion.img
+          src={game.hero}
+          alt={game.title}
+          initial={{ scale: 1.15 }}
+          animate={{ scale: 1.05 }}
+          transition={{ duration: 14, ease: "easeOut", repeat: Infinity, repeatType: "reverse" }}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
+
+      {/* Layered atmosphere — replaces flowery picsum vibe with arcade noir */}
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent" />
+      <div className="absolute inset-0 grid-bg opacity-50 mix-blend-screen pointer-events-none" />
       <div className="absolute inset-0 scanlines opacity-30 pointer-events-none" />
+      {/* Neon edge glow */}
+      <div
+        className="absolute inset-x-0 -bottom-20 h-64 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(60% 80% at 50% 100%, color-mix(in oklab, var(--neon-1) 25%, transparent), transparent 70%)",
+        }}
+      />
 
       <div className="relative z-10 mx-auto max-w-[1400px] px-6 h-full flex flex-col justify-end pb-20">
         <motion.div
@@ -71,10 +97,10 @@ export function Hero({ game }: { game: Game }) {
       </div>
 
       {/* corner ornaments */}
-      <div className="absolute top-4 left-4 text-[10px] tracking-[0.3em] font-display text-muted-foreground">
+      <div className="absolute top-4 left-4 z-10 text-[10px] tracking-[0.3em] font-display text-muted-foreground">
         // FEATURED.001
       </div>
-      <div className="absolute top-4 right-4 text-[10px] tracking-[0.3em] font-display text-muted-foreground">
+      <div className="absolute top-4 right-4 z-10 text-[10px] tracking-[0.3em] font-display text-muted-foreground">
         SIG: {sig}
       </div>
     </section>
