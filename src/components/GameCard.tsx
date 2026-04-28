@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import type { Game } from "@/data/games";
+import { PLACEHOLDER_IMG } from "@/data/games";
 import { useVault } from "@/hooks/useTheme";
 
 export function GameCard({ game, index = 0 }: { game: Game; index?: number }) {
@@ -40,6 +41,10 @@ export function GameCard({ game, index = 0 }: { game: Game; index?: number }) {
           src={game.cover}
           alt={game.title}
           loading="lazy"
+          onError={(e) => {
+            const img = e.currentTarget;
+            if (img.src !== PLACEHOLDER_IMG) img.src = PLACEHOLDER_IMG;
+          }}
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
         {/* slideshow on hover */}
@@ -49,6 +54,10 @@ export function GameCard({ game, index = 0 }: { game: Game; index?: number }) {
             src={src}
             alt=""
             aria-hidden
+            onError={(e) => {
+              const img = e.currentTarget;
+              if (img.src !== PLACEHOLDER_IMG) img.src = PLACEHOLDER_IMG;
+            }}
             className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
             style={{ opacity: hover && i === shotIdx ? 1 : 0 }}
           />
