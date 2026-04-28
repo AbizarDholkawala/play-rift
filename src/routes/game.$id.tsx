@@ -139,7 +139,7 @@ function GameDetail() {
               />
             </div>
             <div className="grid grid-cols-4 gap-2">
-              {game.screenshots.map((src, i) => (
+              {game.screenshots.map((src: string, i: number) => (
                 <button
                   key={src}
                   onClick={() => setShotIdx(i)}
@@ -184,7 +184,7 @@ function GameDetail() {
 
           <Module label="GENRES">
             <div className="flex flex-wrap gap-1.5">
-              {game.genres.map((g) => (
+              {game.genres.map((g: string) => (
                 <span
                   key={g}
                   className="text-[10px] tracking-wider font-display font-bold px-2.5 py-1 border border-border rounded-sm"
