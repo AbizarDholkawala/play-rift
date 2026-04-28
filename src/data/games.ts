@@ -68,7 +68,7 @@ export const PLACEHOLDER_IMG =
       </linearGradient></defs>
       <rect width='600' height='900' fill='url(#g)'/>
       <text x='50%' y='50%' font-family='monospace' font-size='28' fill='#39ff14' opacity='0.6'
-        text-anchor='middle' letter-spacing='6'>NULLCADE</text>
+        text-anchor='middle' letter-spacing='6'>PLAY RIFT</text>
       <text x='50%' y='56%' font-family='monospace' font-size='13' fill='#888'
         text-anchor='middle' letter-spacing='4'>NO SIGNAL</text>
     </svg>`,

@@ -32,13 +32,13 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "NULLCADE — Game Database & Recommender" },
+      { title: "PLAY RIFT — Game Database & Recommender" },
       {
         name: "description",
         content:
           "Discover, track, and collect games. A premium tech-noir game database with platform availability, system requirements, and modding intel.",
       },
-      { property: "og:title", content: "NULLCADE — Game Database" },
+      { property: "og:title", content: "PLAY RIFT — Game Database" },
       { property: "og:description", content: "Discover, track, and collect games." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -85,7 +85,7 @@ function RootComponent() {
           <Outlet />
         </main>
         <footer className="border-t border-border py-8 text-center text-[10px] tracking-[0.3em] font-display text-muted-foreground">
-          NULLCADE // BUILT FOR PLAYERS // {new Date().getFullYear()}
+          PLAY RIFT // BUILT FOR PLAYERS // {new Date().getFullYear()}
         </footer>
       </div>
     </ThemeProvider>

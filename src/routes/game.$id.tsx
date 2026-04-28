@@ -24,9 +24,9 @@ export const Route = createFileRoute("/game/$id")({
     if (!g) return { meta: [{ title: "Game not found" }] };
     return {
       meta: [
-        { title: `${g.title} — NULLCADE` },
+        { title: `${g.title} — PLAY RIFT` },
         { name: "description", content: g.tagline + " " + g.description.slice(0, 120) },
-        { property: "og:title", content: `${g.title} — NULLCADE` },
+        { property: "og:title", content: `${g.title} — PLAY RIFT` },
         { property: "og:description", content: g.tagline },
         { property: "og:image", content: g.hero },
         { name: "twitter:image", content: g.hero },

@@ -28,7 +28,7 @@ export function Nav() {
             </div>
           </motion.div>
           <span className="font-display text-lg tracking-[0.2em] font-bold">
-            NULL<span className="rgb-gradient-text">CADE</span>
+            PLAY<span className="rgb-gradient-text"> RIFT</span>
           </span>
         </Link>
 
