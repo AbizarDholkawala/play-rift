@@ -2,12 +2,32 @@ import type { Game, ModSupport, Platform } from "@/data/games";
 import { PLACEHOLDER_IMG } from "@/data/games";
 
 // Steam Store endpoints are keyless but lack CORS headers.
-// We tunnel them through the public CodeTabs proxy (CORS-enabled, no key).
-const PROXY = "https://api.codetabs.com/v1/proxy/?quest=";
+// We tunnel them through public CORS proxies, with fallback chain.
 const STEAM = "https://store.steampowered.com/api";
 const CDN = "https://shared.steamstatic.com/store_item_assets/steam/apps";
 
-const proxied = (url: string) => `${PROXY}${encodeURIComponent(url)}`;
+// Ordered list — cors.eu.org is currently the most reliable keyless proxy.
+const PROXIES = [
+  (url: string) => `https://cors.eu.org/${url}`,
+  (url: string) =>
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+];
+
+async function proxiedFetch(url: string): Promise<Response | null> {
+  for (const wrap of PROXIES) {
+    try {
+      const res = await fetch(wrap(url));
+      if (!res.ok) continue;
+      // Steam returns JSON; some proxies return HTML error pages with 200.
+      const ct = res.headers.get("content-type") || "";
+      if (ct.includes("text/html")) continue;
+      return res;
+    } catch {
+      // try next proxy
+    }
+  }
+  return null;
+}
 
 export interface SteamSearchHit {
   appId: number;
@@ -24,8 +44,8 @@ export async function searchSteam(term: string, limit = 6): Promise<SteamSearchH
   if (!q) return [];
   try {
     const url = `${STEAM}/storesearch/?term=${encodeURIComponent(q)}&l=en&cc=us`;
-    const res = await fetch(proxied(url));
-    if (!res.ok) return [];
+    const res = await proxiedFetch(url);
+    if (!res) return [];
     const data = await res.json();
     const items: any[] = data.items ?? [];
     return items
@@ -97,8 +117,8 @@ function platformsFrom(p: any | undefined): Platform[] {
 export async function fetchSteamGame(appId: number): Promise<Game | null> {
   try {
     const url = `${STEAM}/appdetails?appids=${appId}&l=en&cc=us`;
-    const res = await fetch(proxied(url));
-    if (!res.ok) return null;
+    const res = await proxiedFetch(url);
+    if (!res) return null;
     const json = await res.json();
     const entry = json[String(appId)];
     if (!entry?.success || !entry.data) return null;
