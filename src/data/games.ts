@@ -34,7 +34,7 @@ export interface Game {
 }
 
 // Steam CDN helpers — public, keyless, CORS-friendly
-const steamCDN = "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps";
+const steamCDN = "https://shared.steamstatic.com/store_item_assets/steam/apps";
 const steamPortrait = (id: number) => `${steamCDN}/${id}/library_600x900.jpg`;
 const steamHero = (id: number) => `${steamCDN}/${id}/library_hero.jpg`;
 const steamHeader = (id: number) => `${steamCDN}/${id}/header.jpg`;
